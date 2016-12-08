@@ -19,6 +19,8 @@ parser.add_argument('-f','--fuzzy',help='Allow up to 1 extra letter between thos
 parser.add_argument('-d','--drop', type=int, default = 0,
 	help = 'Max number of keywords to drop to find a match.')
 parser.add_argument('--dict', help = 'Set a different dictionary path.')
+parser.add_argument('-v','--verbose', help = 'Report verbose progress.', 
+	action='store_true')
 
 # get the arguments
 args = parser.parse_args()
@@ -46,6 +48,7 @@ wraw = f.readlines()
 f.close()
 # strip line ending for each
 wlist = [re.sub('\n','',x) for x in wraw]
+wcombo = " ".join(wlist)
 
 # now generate all possible combinations of these letters
 
@@ -79,17 +82,18 @@ btw = "[a-z\']{0,1}" if args.fuzzy else ""
 regs = []
 
 for c in combos:
-	n = "^" + btw.join(c) + "$"
+	n = "\s" + btw.join(c) + "\s"
 	regs.append(re.compile(n))
 
 results = []
 
 # now check regex against each word
 # is there a faster way to do this?
-for r in regs:
-	for w in wlist:
-		m = r.search(w.lower())
-		if (m != None): results.append(m.group(0))
+for i,r in enumerate(regs):
+	results.extend(r.findall(wcombo))
+	if (args.verbose and i > 0):
+		if (i % (0.1 * len(regs)) == 0):
+			print(i, 'combinations checked')
 
 # print unique sorted results
 for r in set(results):
