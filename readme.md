@@ -11,7 +11,7 @@ Standard usage:
 Use the `--help` flag for help:
 
 ```
-usage: ageni.py [-h] [-f] [-d DROP] [--dict DICT] K [K ...]
+usage: ageni.py [-h] [-f] [-d DROP] [--dict DICT] [-v] K [K ...]
 
 Get anagrams of some letter combinations to help think of cool trial name
 acronyms.
@@ -25,4 +25,5 @@ optional arguments:
                         keywords
   -d DROP, --drop DROP  Max number of keywords to drop to find a match.
   --dict DICT           Set a different dictionary path.
+  -v, --verbose         Report verbose progress.
 ```
