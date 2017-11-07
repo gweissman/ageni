@@ -21,6 +21,8 @@ parser.add_argument('-d','--drop', type=int, default = 0,
 parser.add_argument('--dict', help = 'Set a different dictionary path.')
 parser.add_argument('-v','--verbose', help = 'Report verbose progress.', 
 	action='store_true')
+parser.add_argument('-p','--parallel', help = 'Run in parallel with joblib. Requires joblib.',
+	action='store_true')
 
 # get the arguments
 args = parser.parse_args()
@@ -90,18 +92,27 @@ results = []
 
 # now check regex against each word
 # is there a faster way to do this?
-for i,r in enumerate(regs):
-	results.extend(r.findall(wcombo))
-	if (args.verbose and i > 0):
-		if (i % (0.1 * len(regs)) == 0):
-			print(i, 'combinations checked')
+if (not args.parallel):
+	for i,r in enumerate(regs):
+		results.extend(r.findall(wcombo))
+		if (args.verbose and i > 0):
+			if (i % (0.1 * len(regs)) == 0):
+				print(i, 'combinations checked')
+else:
+	from joblib import Parallel, delayed
+	def helpfind(rgx,txt):
+		return(rgx.findall(txt))
+	results = Parallel(n_jobs=5,verbose=True)(delayed(helpfind)(rgx=r,txt=wcombo) for r in regs)
 
 # return acknowledgment of null result if applicable
 if len(results) == 0:
 	print("Sorry, we didn't find any matches.")
+
+# unlist the lists if needed
+results = sum(results, [])
 			
 # print unique sorted results
 for r in set(results):
-	print(''.join(r))
+	print(r) #print(''.join(r))
 
 
