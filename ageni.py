@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # AGENI = Acronym GEnerator for Name Ideas
-# December 2016
+# November 2017
 # author: Gary (gary DOT weissman AT uphs DOT upenn DOT edu)
 # license: GPL-3
 
@@ -14,7 +14,7 @@ from itertools import permutations
 parser = argparse.ArgumentParser(description='Get anagrams of some letter combinations to help think of cool trial name acronyms.')
 parser.add_argument('keywords', metavar='K', nargs = '+',
 	 help='A list of keywords separated by spaces')
-parser.add_argument('-f','--fuzzy',help='Allow up to 1 extra letter between those selected from keywords',
+parser.add_argument('-f','--fuzzy',help='Allow optional use of the second letter from keywords',
 	action='store_true') 
 parser.add_argument('-d','--drop', type=int, default = 0,
 	help = 'Max number of keywords to drop to find a match.')
@@ -40,7 +40,10 @@ if (drop < 0):
 	print('Warning: Drop cannot be a negative number. Changing drop to ', drop)
 
 # get the letters of interest
-loi = [ x[0] for x in kw]
+if (args.fuzzy):
+	loi = [ x[0:1] + '?' for x in kw]
+else:
+	loi = [ x[0] for x in kw]
 
 # get some words
 f = open(my_dict,'r')
@@ -75,14 +78,11 @@ if (len(combos) > warn_limit):
 print('\nNow building anagrams for',len(combos),'letter combinations with fuzzy matching:',
 	'ON' if args.fuzzy else 'OFF', 'and dropping up to', drop,'terms')
 
-# use either nothing or some kind of buffer depending on flags
-btw = "[a-z\']{0,1}" if args.fuzzy else ""
-
 # now build each regex
 regs = []
 
 for c in combos:
-	n = "\s" + btw.join(c) + "\s"
+	n = "\s" + ''.join(c) + "\s"
 	regs.append(re.compile(n))
 
 results = []
