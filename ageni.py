@@ -41,9 +41,10 @@ if (drop < 0):
 
 # get the letters of interest
 if (args.fuzzy):
-	loi = [ '(' + x[0:2].lower() + '?)' for x in kw]
+	loi = [ '(' + x[0:2].lower() + '?)' if len(x) > 1 else '('+x[0].lower()+')' for x in kw]
 else:
 	loi = [ x[0].lower() for x in kw]
+
 
 # get some words
 f = open(my_dict,'r')
@@ -97,6 +98,6 @@ for i,r in enumerate(regs):
 
 # print unique sorted results
 for r in set(results):
-	print(r)
+	print(''.join(r))
 
 
