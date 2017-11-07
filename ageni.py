@@ -23,6 +23,8 @@ parser.add_argument('-v','--verbose', help = 'Report verbose progress.',
 	action='store_true')
 parser.add_argument('-p','--parallel', help = 'Run in parallel with joblib. Requires joblib.',
 	action='store_true')
+parser.add_argument('-n','--n_cpus', type=int, default = 5, 
+	help = 'Number of CPUs to use with parallel jobs.')
 
 # get the arguments
 args = parser.parse_args()
@@ -93,7 +95,7 @@ else:
 	def comprgx(c):
 		n = "\s" + ''.join(c) + "\s"
 		return(re.compile(n))
-	regs = Parallel(n_jobs=5,verbose=args.verbose)(delayed(comprgx)(c) for c in combos)	
+	regs = Parallel(n_jobs=args.n_cpus,verbose=args.verbose)(delayed(comprgx)(c) for c in combos)	
 
 results = []
 
@@ -110,7 +112,7 @@ else:
 	from joblib import Parallel, delayed
 	def helpfind(rgx,txt):
 		return(rgx.findall(txt))
-	results = Parallel(n_jobs=5,verbose=args.verbose)(delayed(helpfind)(rgx=r,txt=wcombo) for r in regs)
+	results = Parallel(n_jobs=args.n_cpus,verbose=args.verbose)(delayed(helpfind)(rgx=r,txt=wcombo) for r in regs)
 
 # return acknowledgment of null result if applicable
 if len(results) == 0:

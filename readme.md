@@ -11,7 +11,8 @@ Standard usage:
 Use the `--help` flag for help:
 
 ```
-usage: ageni.py [-h] [-f] [-d DROP] [--dict DICT] [-v] [-p] K [K ...]
+usage: ageni.py [-h] [-f] [-d DROP] [--dict DICT] [-v] [-p] [-n N_CPUS]
+                K [K ...]
 
 Get anagrams of some letter combinations to help think of cool trial name
 acronyms.
@@ -26,4 +27,6 @@ optional arguments:
   --dict DICT           Set a different dictionary path.
   -v, --verbose         Report verbose progress.
   -p, --parallel        Run in parallel with joblib. Requires joblib.
+  -n N_CPUS, --n_cpus N_CPUS
+                        Number of CPUs to use with parallel jobs.
 ```
