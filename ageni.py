@@ -84,13 +84,21 @@ print('\nNow building anagrams for',len(combos),'letter combinations with fuzzy 
 # now build each regex
 regs = []
 
-for c in combos:
-	n = "\s" + ''.join(c) + "\s"
-	regs.append(re.compile(n))
+if (not args.parallel):
+	for c in combos:
+		n = "\s" + ''.join(c) + "\s"
+		regs.append(re.compile(n))
+else:
+	from joblib import Parallel, delayed
+	def comprgx(c):
+		n = "\s" + ''.join(c) + "\s"
+		return(re.compile(n))
+	regs = Parallel(n_jobs=5,verbose=args.verbose)(delayed(comprgx)(c) for c in combos)	
 
 results = []
 
 # now check regex against each word
+print('Now checking letter combinations against dictionary...')
 # is there a faster way to do this?
 if (not args.parallel):
 	for i,r in enumerate(regs):
@@ -102,17 +110,19 @@ else:
 	from joblib import Parallel, delayed
 	def helpfind(rgx,txt):
 		return(rgx.findall(txt))
-	results = Parallel(n_jobs=5,verbose=True)(delayed(helpfind)(rgx=r,txt=wcombo) for r in regs)
+	results = Parallel(n_jobs=5,verbose=args.verbose)(delayed(helpfind)(rgx=r,txt=wcombo) for r in regs)
 
 # return acknowledgment of null result if applicable
 if len(results) == 0:
 	print("Sorry, we didn't find any matches.")
+else:
+	print("Matching terms:\n")
 
 # unlist the lists if needed
 results = sum(results, [])
 			
 # print unique sorted results
 for r in set(results):
-	print(r) #print(''.join(r))
+	print(''.join(r))
 
 
