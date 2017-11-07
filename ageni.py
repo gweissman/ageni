@@ -41,9 +41,9 @@ if (drop < 0):
 
 # get the letters of interest
 if (args.fuzzy):
-	loi = [ x[0:1] + '?' for x in kw]
+	loi = [ x[0:1].lower() + '?' for x in kw]
 else:
-	loi = [ x[0] for x in kw]
+	loi = [ x[0].lower() for x in kw]
 
 # get some words
 f = open(my_dict,'r')
