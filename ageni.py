@@ -96,6 +96,10 @@ for i,r in enumerate(regs):
 		if (i % (0.1 * len(regs)) == 0):
 			print(i, 'combinations checked')
 
+# return acknowledgment of null result if applicable
+if len(results) == 0:
+	print("Sorry, we didn't find any matches.")
+			
 # print unique sorted results
 for r in set(results):
 	print(''.join(r))
