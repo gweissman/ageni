@@ -30,3 +30,5 @@ optional arguments:
   -n N_CPUS, --n_cpus N_CPUS
                         Number of CPUs to use with parallel jobs.
 ```
+
+For example, on MacOS the Unix word file is found at `/usr/share/dict/words`
