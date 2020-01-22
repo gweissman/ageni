@@ -15,15 +15,15 @@ parser = argparse.ArgumentParser(description='Get anagrams of some letter combin
 parser.add_argument('keywords', metavar='K', nargs = '+',
 	 help='A list of keywords separated by spaces')
 parser.add_argument('-f','--fuzzy',help='Allow optional use of the second letter from keywords',
-	action='store_true') 
+	action='store_true')
 parser.add_argument('-d','--drop', type=int, default = 0,
 	help = 'Max number of keywords to drop to find a match.')
 parser.add_argument('--dict', help = 'Set a different dictionary path.')
-parser.add_argument('-v','--verbose', help = 'Report verbose progress.', 
+parser.add_argument('-v','--verbose', help = 'Report verbose progress.',
 	action='store_true')
 parser.add_argument('-p','--parallel', help = 'Run in parallel with joblib. Requires joblib.',
 	action='store_true')
-parser.add_argument('-n','--n_cpus', type=int, default = 5, 
+parser.add_argument('-n','--n_cpus', type=int, default = 5,
 	help = 'Number of CPUs to use with parallel jobs.')
 
 # get the arguments
@@ -78,7 +78,7 @@ if (len(combos) > warn_limit):
 	if (contyn == "q"):
 		print('Quitting...')
 		sys.exit()
-	
+
 # print plan
 print('\nNow building anagrams for',len(combos),'letter combinations with fuzzy matching:',
 	'ON' if args.fuzzy else 'OFF', 'and dropping up to', drop,'terms')
@@ -95,7 +95,7 @@ else:
 	def comprgx(c):
 		n = "\s" + ''.join(c) + "\s"
 		return(re.compile(n))
-	regs = Parallel(n_jobs=args.n_cpus,verbose=args.verbose)(delayed(comprgx)(c) for c in combos)	
+	regs = Parallel(n_jobs=args.n_cpus,verbose=args.verbose)(delayed(comprgx)(c) for c in combos)
 
 results = []
 
@@ -122,9 +122,7 @@ else:
 
 # unlist the lists if needed
 results = sum(results, [])
-			
+
 # print unique sorted results
 for r in set(results):
 	print(''.join(r))
-
-
